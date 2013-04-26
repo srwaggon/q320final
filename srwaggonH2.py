@@ -1,36 +1,49 @@
 #!/usr/bin/env python
 
 
-import Agent, Env, Food, random, turtle
+import Prog, Env, Food, random, turtle
 
-def sim(steps=1000, pop=40, startingFood=100, boundary=300, render=True):
+def sim(steps=1000, pop=40, noms=100, nutrients=40, bounds=300, render=True):
     if render:
         scr = turtle.Screen()
         scr.colormode(255)
         scr.delay(1)
 
-    e = Env.Env(render=render)
+    env = Env.Env(render=render)
+
+    for i in range(noms):
+        x = random.uniform(-bounds, bounds)
+        y = random.uniform(-bounds, bounds)
+        env.addFood(Food.Food(x, y, nutrients, render=render))
 
     for i in range(pop):
-        code = Agent.randomCode()
         gender = random.choice([True,False])
-        e.addAgent(Agent.Agent(code, isMale=gender, x=random.randint(-boundary,boundary), y=random.randint(-boundary, boundary), render=render))
+        env.addProg(Prog.Prog(x=random.randint(-bounds,bounds), y=random.randint(-bounds, bounds), render=render))
 
-    for i in range(startingFood):
-        x = random.uniform(-boundary, boundary)
-        y = random.uniform(-boundary, boundary)
-        nutrients = random.uniform(50,100)
-        e.addFood(Food.Food(x, y, nutrients, render=render))
 
     outfile = open("log.txt", 'w')
+
+
     while steps != 0:
-        e.tick()
-        p = len(e.getAgents())
+        env.tick()
+        p = len(env.getProgs())
         outfile.write(str(p) + "\n")
         if p == 0:
-            print "All agents deceased."
+            print "All progs deceased."
             break
         steps -= 1
+
+        nrg = 0
+        v = 0
+        progs = env.getProgs()
+        numProgs = len(progs)
+        for prog in progs:
+            nrg += prog.getEnergy()
+            v += prog.getVelocity()
+
+
+        print len(env.getFood()) * nutrients, nrg, numProgs, 1.0*nrg / numProgs, 1.0* v / numProgs
+
     print "final population:", p
     print "Simulation ended."
 
@@ -40,6 +53,19 @@ def sim(steps=1000, pop=40, startingFood=100, boundary=300, render=True):
 
 
 if __name__ == "__main__":
-    sim(steps=1000, render=False)
+    steps = -1
+    bounds = 600
+    pop = 40
+    food = pop * 100 # 400
+    nutrients = 10
+    render=True
+    #render=False
+
+    food_density = 1.0 * food / (bounds*bounds)
+    nut_density = 1.0 * nutrients*food / (bounds*bounds)
+    print "food density", food_density
+    print "nutritional density", nut_density
+    
+    sim(steps, pop, food, nutrients, bounds, render)
 
     

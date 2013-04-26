@@ -6,19 +6,20 @@
 # Assignment 5
 
 
-import Entity, random, turtle
+import Entity, random
 
 
 class Food(Entity.Entity):
 
     def __init__(self, x=0.0, y=0.0, nutrients=(random.uniform(5,25)+10), render=True):
+
         Entity.Entity.__init__(self, x, y, render)
 
         self.nutrients = nutrients
 
         if self.turtle is not None:
-            self.turtle.penup()
             self.turtle.hideturtle()
+            self.turtle.penup()
             self.turtle.setpos(self.x, self.y)
             self.turtle.color((128-nutrients, 255, 128-nutrients))
             self.turtle.dot()
@@ -26,7 +27,7 @@ class Food(Entity.Entity):
 
 
     def tick(self, env):
-        pass # Don't do anything. Food need not.
+        pass # food need not do anything.
 
 
     def isAlive(self):
