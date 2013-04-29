@@ -8,8 +8,8 @@ import Entity, math, random, turtle
 
 class Prog(Entity.Entity):
 
-    PUBERTY = 30
-    GESTATION = 20
+    PUBERTY = 20
+    GESTATION = 30
 
     # Colours:
     BOY_COLOUR   = (128,128,196)  # sexually immature male
@@ -20,7 +20,7 @@ class Prog(Entity.Entity):
 
     HUNGER_THRESHOLD = 100
     MUTATION_RATE = .25
-    REPRODUCTION_COST = 10 # Subtracted from prog's energy upon fertilization.
+    REPRODUCTION_COST = 0 # Subtracted from prog's energy upon fertilization.
 
     def __init__(self, velocity=None, gender=None, x=0.0, y=0.0, render=True):
         """
@@ -34,7 +34,7 @@ class Prog(Entity.Entity):
         self.gender = gender if gender is not None else random.choice(["male", "female"])
         self.s = 1 # Sense of.. smell...
 
-        self.velocity = velocity if velocity is not None else random.randint(0, 1000)
+        self.velocity = velocity if velocity is not None else random.randint(0, 400)
         
         if random.random() <= Prog.MUTATION_RATE:
             self.velocity += random.randint(-5, 5)
